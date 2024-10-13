@@ -1,5 +1,10 @@
+import { Colors } from "react-native/Libraries/NewAppScreen";
+
 export const theme = {
-    colorCerulean: '#1a759f',
-    colorBlack: '#000000',
-    colorWhite: '#ffffff',
+  colorCerulean: "#1a759f",
+  colorWhite: "#fff",
+  colorBlack: "#000",
+  colorGrey: "grey",
+  colorLightGrey: "#eee",
+
 };
