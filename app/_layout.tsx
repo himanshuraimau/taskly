@@ -1,13 +1,16 @@
 import { Tabs } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import { theme } from "../theme";
 
 export default function Layout() {
   return (
-    <Tabs>
+    <Tabs screenOptions={{ tabBarActiveTintColor: theme.colorCerulean }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: "Prasun List",
+          title: "Shopping List",
           tabBarIcon: ({ color, size }) => (
             <Feather name="list" size={size} color={color} />
           ),
@@ -18,7 +21,7 @@ export default function Layout() {
         options={{
           title: "Counter",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="plus" size={size} color={color} />
+            <AntDesign name="clockcircleo" size={size} color={color} />
           ),
         }}
       />
@@ -27,7 +30,7 @@ export default function Layout() {
         options={{
           title: "Counter",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="plus" size={size} color={color} />
+            <FontAwesome5 name="lightbulb " size={size} color={color} />
           ),
         }}
       />
