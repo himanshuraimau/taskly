@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, ScrollView } from "react-native";
+import { StyleSheet, TextInput, Text, FlatList, View } from "react-native";
 import { ShoppingListItem } from "../components/ShoppingListItem";
 import { theme } from "../theme";
 import { useState } from "react";
@@ -8,16 +8,8 @@ type ShoppingListItemType = {
   id: string;
 };
 
-const initialList: ShoppingListItemType[] = [
-  { name: "Coffee", id: "1" },
-  { name: "Tea", id: "2" },
-  { name: "Milk", id: "3" },
-  { name: "Bread", id: "4" },
-];
-
 export default function App() {
-  const [shoppingList, setShoppingList] =
-    useState<ShoppingListItemType[]>(initialList);
+  const [shoppingList, setShoppingList] = useState<ShoppingListItemType[]>([]);
   const [value, setValue] = useState("");
 
   const handleSubmit = () => {
@@ -32,24 +24,31 @@ export default function App() {
   };
 
   return (
-    <ScrollView
+    <FlatList
+      data={shoppingList}
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
       stickyHeaderIndices={[0]}
-    >
-      <TextInput
-        placeholder="E.g. Coffee"
-        style={styles.textInput}
-        value={value}
-        onChangeText={setValue}
-        keyboardType="default"
-        returnKeyType="done"
-        onSubmitEditing={handleSubmit}
-      />
-      {shoppingList.map((item) => (
-        <ShoppingListItem key={item.id} name={item.name} />
-      ))}
-    </ScrollView>
+      ListEmptyComponent={
+        <View style={styles.listEmptyContainer}>
+          <Text>
+            Your shopping list is empty. Add items using the input above.
+          </Text>
+        </View>
+      }
+      ListHeaderComponent={
+        <TextInput
+          placeholder="E.g. Coffee"
+          style={styles.textInput}
+          value={value}
+          onChangeText={setValue}
+          keyboardType="default"
+          returnKeyType="done"
+          onSubmitEditing={handleSubmit}
+        />
+      }
+      renderItem={({ item }) => <ShoppingListItem name={item.name} />}
+    />
   );
 }
 
@@ -58,6 +57,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colorWhite,
     flex: 1,
     padding: 12,
+  },
+  listEmptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   contentContainer: {
     paddingBottom: 24,
