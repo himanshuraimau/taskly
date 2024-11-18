@@ -1,13 +1,28 @@
-import { TouchableOpacity, View, Alert, StyleSheet, Text } from "react-native";
+import {
+  TouchableOpacity,
+  View,
+  Alert,
+  StyleSheet,
+  Text,
+  Pressable,
+} from "react-native";
 import { theme } from "../theme";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
 
 type Props = {
   name: string;
   isCompleted?: boolean;
+  onDelete: () => void;
+  onToggleComplete?: () => void;
 };
 
-export function ShoppingListItem({ name, isCompleted }: Props) {
+export function ShoppingListItem({
+  name,
+  isCompleted,
+  onDelete,
+  onToggleComplete,
+}: Props) {
   const handleDelete = () => {
     Alert.alert(
       `Are you sure you want to delete ${name}?`,
@@ -15,7 +30,7 @@ export function ShoppingListItem({ name, isCompleted }: Props) {
       [
         {
           text: "Yes",
-          onPress: () => console.log("Ok, deleting."),
+          onPress: () => onDelete(),
           style: "destructive",
         },
         { text: "Cancel", style: "cancel" },
@@ -24,20 +39,28 @@ export function ShoppingListItem({ name, isCompleted }: Props) {
   };
 
   return (
-    <View
+    <Pressable
       style={[
         styles.itemContainer,
         isCompleted ? styles.completedContainer : undefined,
       ]}
+      onPress={onToggleComplete}
     >
-      <Text
-        style={[
-          styles.itemText,
-          isCompleted ? styles.completedText : undefined,
-        ]}
-      >
-        {name}
-      </Text>
+      <View style={styles.row}>
+        <Entypo
+          name={isCompleted ? "check" : "circle"}
+          size={24}
+          color={isCompleted ? theme.colorGrey : theme.colorCerulean}
+        />
+        <Text
+          style={[
+            styles.itemText,
+            isCompleted ? styles.completedText : undefined,
+          ]}
+        >
+          {name}
+        </Text>
+      </View>
       <TouchableOpacity onPress={handleDelete} activeOpacity={0.8}>
         <AntDesign
           name="delete"
@@ -45,7 +68,7 @@ export function ShoppingListItem({ name, isCompleted }: Props) {
           color={isCompleted ? theme.colorGrey : theme.colorRed}
         />
       </TouchableOpacity>
-    </View>
+    </Pressable>
   );
 }
 
@@ -70,5 +93,11 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 18,
     fontWeight: "200",
+    flex: 1,
+  },
+  row: {
+    flexDirection: "row",
+    gap: 8,
+    flex: 1,
   },
 });
