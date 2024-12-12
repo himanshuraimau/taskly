@@ -10,6 +10,7 @@ import { ShoppingListItem } from "../components/ShoppingListItem";
 import { theme } from "../theme";
 import { useEffect, useState } from "react";
 import { getFromStorage, setInStorage } from "../utils/storage";
+import React from "react";
 
 type ShoppingListItemType = {
   name: string;

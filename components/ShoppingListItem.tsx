@@ -9,6 +9,7 @@ import {
 import { theme } from "../theme";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
+import React from "react";
 
 type Props = {
   name: string;

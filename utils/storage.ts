@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import React from "react";
 
 export async function getFromStorage(key: string) {
   try {
