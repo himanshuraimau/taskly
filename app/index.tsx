@@ -1,16 +1,10 @@
-import {
-  StyleSheet,
-  TextInput,
-  Text,
-  FlatList,
-  View,
-  LayoutAnimation,
-} from "react-native";
+import { StyleSheet, TextInput, FlatList, View, Text, LayoutAnimation, Platform, UIManager } from "react-native";
 import { ShoppingListItem } from "../components/ShoppingListItem";
 import { theme } from "../theme";
 import { useEffect, useState } from "react";
 import { getFromStorage, setInStorage } from "../utils/storage";
 import React from "react";
+import * as Haptics from "expo-haptics";
 
 type ShoppingListItemType = {
   name: string;
@@ -20,6 +14,13 @@ type ShoppingListItemType = {
 };
 
 const storageKey = "shoppingList";
+
+// Enable layout animation for Android
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
 
 export default function App() {
   const [shoppingList, setShoppingList] = useState<ShoppingListItemType[]>([]);
@@ -53,28 +54,35 @@ export default function App() {
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     const newShoppingList = shoppingList.filter((item) => item.id !== id);
 
-    setInStorage(storageKey, newShoppingList);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShoppingList(newShoppingList);
+    setInStorage(storageKey, newShoppingList);
   };
 
-  const handleToggleComplete = (id: string) => {
+  const handleToggleComplete = async (id: string) => {
     const newShoppingList = shoppingList.map((item) => {
       if (item.id === id) {
+        const isCompleting = !item.completedAtTimestamp;
+        // Trigger haptic feedback before state update
+        if (isCompleting) {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        } else {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        }
+        
         return {
           ...item,
           lastUpdatedTimestamp: Date.now(),
-          completedAtTimestamp: item.completedAtTimestamp
-            ? undefined
-            : Date.now(),
+          completedAtTimestamp: isCompleting ? Date.now() : undefined,
         };
       }
-
       return item;
     });
+    
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setShoppingList(newShoppingList);
     setInStorage(storageKey, newShoppingList);
